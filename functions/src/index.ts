@@ -1,11 +1,14 @@
 'use strict';
 
+// TODO: replace to import
 // import * as functions from 'firebase-functions';
 // import DialogflowApp as App from 'actions-on-google';
+
 const App = require('actions-on-google').DialogflowApp;
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
+
 const dbref = admin.database().ref();
 
 process.env.DEBUG = "actions-on-google:*";
@@ -18,10 +21,6 @@ class UserPreference {
 
     constructor(init?: Partial<UserPreference>) {
         Object.assign(this, init);
-        // this.id = id;
-        // this.startTime = 0;
-        // this.countTime = 10 * 1000;
-        // this.loginedAt = loginedAt;
     }
 
     public isStarting(): boolean {
@@ -97,7 +96,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
 
     const actionMap = new Map();
     actionMap.set('instruction.welcome', (_app) => {
-        console.log("instruction.welcome3");
+        console.log("instruction.welcome");
 
         _app.ask('<speak>決闘カウントダウンへようこそ。ルールを知りたいときは、<prosody volume="loud">「ルール」</prosody>やめたいときは<prosody volume="loud">「さらばだ」</prosody>といってね</speak>', []);
         const user = new UserPreference({id: user_id, loginedAt: new Date().getTime()});
@@ -142,7 +141,8 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
             .catch(err => console.error(err));
     });
     actionMap.set('instruction.exit', (_app) => {
-        console.log('bye');
+        console.log('instruction.exit');
+
         _app.tell('さらばだ! また会おう');
     });
 
